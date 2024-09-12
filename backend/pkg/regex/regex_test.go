@@ -21,7 +21,7 @@ func TestLiteralMatch(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := regex.Match(tt.pattern, tt.input)
+			got, _ := regex.Match(tt.pattern, tt.input)
 			if got != tt.want {
 				t.Errorf(
 					"Match(%q, %q) = %v, want %v",
@@ -50,7 +50,7 @@ func TestBasicCharacterMatching(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := regex.Match(tt.pattern, tt.input)
+			got, _ := regex.Match(tt.pattern, tt.input)
 			if got != tt.want {
 				t.Errorf(
 					"Match(%q, %q) = %v, want %v",

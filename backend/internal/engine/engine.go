@@ -1,21 +1,19 @@
 package engine
 
-import "log"
-
 // Match checks if the pattern matches anywhere in the text
-func Match(pattern string, text string) bool {
+func Match(pattern string, text string) (bool, []string) {
 	return literalMatch([]byte(pattern), []byte(text))
 }
 
 // literalMatch checks if the pattern appears anywhere in the text
-func literalMatch(pattern []byte, text []byte) bool {
+func literalMatch(pattern []byte, text []byte) (bool, []string) {
+	var matches []string
 	if len(pattern) == 0 {
-		return true
+		return true, matches
 	}
 
 	//literal match with . character
 	j := 0
-	var matches []string
 	for i := 0; i < len(text); i++ {
 		if pattern[j] == text[i] || (pattern[j] == '.' && text[i] != '\n') {
 			j++
@@ -29,7 +27,5 @@ func literalMatch(pattern []byte, text []byte) bool {
 		}
 	}
 
-	log.Println(matches)
-
-	return len(matches) > 0
+	return len(matches) > 0, matches
 }

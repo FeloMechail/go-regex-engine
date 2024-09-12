@@ -32,11 +32,12 @@ func main() {
 
 		log.Printf("Patter: %s, Text: %s\n", request.Pattern, request.Text)
 
-		matched := regex.Match(request.Pattern, request.Text)
-		log.Printf("Match?: %t\n", matched)
+		matched, matches := regex.Match(request.Pattern, request.Text)
+		log.Printf("Match?: %t, %v\n", matched, matches)
 
 		return c.JSON(fiber.Map{
 			"matched": matched,
+			"matches": matches,
 		})
 	})
 

@@ -1,11 +1,13 @@
 # Todo List: Implement a Regex Engine with NFA in Go
 
 1. [x] Set up the project structure
+   - [x] Setup Frontend using svelte
 2. [x] Implement literal string matching
 
-3. [ ] Implement basic character matching
-   - [ ] Single character matching (e.g., 'a', 'b', 'c')
-   - [ ] Any character matching (e.g., '.')
+3. [x] Implement basic character matching
+   - [x] Single character matching (e.g., 'a', 'b', 'c')
+   - [x] Any character matching (e.g., '.')
+   - [ ] implement multiple lines
 
 4. [ ] Design and implement NFA structure
    - [ ] Define State and NFA structs
