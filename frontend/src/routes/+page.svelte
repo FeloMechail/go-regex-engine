@@ -3,7 +3,6 @@
   let text = '';
   let result = null;
   let matchesarray = [];
-
     async function handleSubmit() {
     const response = await fetch('http://localhost:3100/api/match', {
         method: 'POST',
@@ -14,7 +13,8 @@
     });
     result = await response.json();
     matchesarray = result.matches;
-    }
+
+}
 
 </script>
 
@@ -44,18 +44,16 @@
     </div>
 
     <!-- Result Section -->
-     {#if result !== null}
+    {#if result !== null}
     <div class="w-full max-w-2xl mt-6">
       <div class="bg-gray-700 p-4 rounded">
         {result.matched ? "Match Found: " : "No Match"}
-        {#if result.matched}
-          {#each matchesarray as match}
-            <div class="bg-gray-800 p-2 rounded mt-2">
-              {match}
-            </div>
+        <ul>
+          {#each matchesarray as match, index}
+            <li>Match {index +2} {match.Rangee.join("-")}: {match.Match}</li>
           {/each}
-        {/if}
+        </ul>
       </div>
     </div>
-    {/if}
+  {/if}
   </div>

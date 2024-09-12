@@ -1,15 +1,22 @@
 package engine
 
+type Matches struct {
+	Match  string
+	Rangee []int
+}
+
 // Match checks if the pattern matches anywhere in the text
-func Match(pattern string, text string) (bool, []string) {
+func Match(pattern string, text string) (bool, []Matches) {
 	return literalMatch([]byte(pattern), []byte(text))
 }
 
 // literalMatch checks if the pattern appears anywhere in the text
-func literalMatch(pattern []byte, text []byte) (bool, []string) {
-	var matches []string
+func literalMatch(pattern []byte, text []byte) (bool, []Matches) {
+
+	found := make([]Matches, 0)
+
 	if len(pattern) == 0 {
-		return true, matches
+		return true, found
 	}
 
 	//literal match with . character
@@ -22,10 +29,10 @@ func literalMatch(pattern []byte, text []byte) (bool, []string) {
 		}
 
 		if j == len(pattern) {
-			matches = append(matches, string(text[i-len(pattern)+1:i+1]))
+			found = append(found, Matches{string(text[i-len(pattern)+1 : i+1]), []int{i - len(pattern) + 1, i + 1}})
 			j = 0
 		}
 	}
 
-	return len(matches) > 0, matches
+	return len(found) > 0, found
 }
