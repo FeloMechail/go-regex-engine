@@ -10,6 +10,7 @@
    - [ ] implement multiple lines
 
 4. [ ] Design and implement NFA structure
+   - [x] Design Stack data structure and RPN parser using Shunting yard Algo
    - [ ] Define State and NFA structs
    - [ ] Implement state transitions
 
@@ -27,7 +28,7 @@
 
 8. [ ] Implement alternation (|)
 
-9. [ ] Implement grouping with parentheses ()
+9.  [ ] Implement grouping with parentheses ()
 
 10. [ ] Implement anchors
     - [ ] Start of string (^)
