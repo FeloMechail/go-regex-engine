@@ -4,22 +4,52 @@ import (
 	"fmt"
 )
 
-var precedence = map[rune]struct {
+// var precedence = map[rune]struct {
+// 	prec      int
+// 	righAssoc bool
+// }{
+// 	'^': {4, true},
+// 	'*': {3, false},
+// 	'/': {3, false},
+// 	'+': {2, false},
+// 	'-': {2, false},
+// }
+
+var regexPrecedence = map[rune]struct {
 	prec      int
 	righAssoc bool
 }{
-	'^': {4, true},
-	'*': {3, false},
-	'/': {3, false},
-	'+': {2, false},
-	'-': {2, false},
+	'*': {5, false},
+	'+': {5, false},
+	'?': {5, false},
+	'&': {4, false},
+	'|': {3, true},
+	'^': {1, false},
+	'$': {1, false},
 }
 
-//testInput := "3+4*2(1-5)*2*3"
+func isLetter(c byte) bool {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+}
+
+func addCancatenation(input string) (output string) {
+	for i := 0; i < len(input); i++ {
+		output += string(input[i])
+		if i+1 < len(input) {
+			current := input[i]
+			next := input[i+1]
+
+			if (isLetter(current) || current == ')' || current == '*' || current == '+' || current == '?') && isLetter(next) || next == '(' || next == '.' {
+				output += "&"
+			}
+		}
+	}
+	return
+}
 
 func ParseInput(input string) (rpn []string) {
-
 	stack := Stack[rune]{}
+	input = addCancatenation(input)
 	for _, char := range input {
 		switch char {
 		case ' ':
@@ -40,10 +70,10 @@ func ParseInput(input string) (rpn []string) {
 				stack.Pop()
 			}
 		default:
-			if prec, isOp := precedence[char]; isOp {
+			if prec, isOp := regexPrecedence[char]; isOp {
 				for !stack.IsEmpty() {
 					op, _ := stack.Top()
-					if prec2, isOp := precedence[op]; !isOp || prec.prec > prec2.prec || prec.prec == prec2.prec && prec.righAssoc {
+					if prec2, isOp := regexPrecedence[op]; !isOp || prec.prec > prec2.prec || prec.prec == prec2.prec && prec.righAssoc {
 						break
 					}
 					//top item is an operator

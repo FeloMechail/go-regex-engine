@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -10,35 +9,39 @@ func TestParseInput(t *testing.T) {
 		input    string
 		expected []string
 	}{
-		// Simple expressions
-		{"3 + 4", []string{"3", "4", "+"}},
-		{"2 * 3", []string{"2", "3", "*"}},
-		{"5 - 2", []string{"5", "2", "-"}},
+		// Simple concatenation
+		{"ab", []string{"a", "b", "&"}},            // "a" followed by "b" -> RPN: a b &
+		{"abc", []string{"a", "b", "&", "c", "&"}}, // "a" followed by "b" then "c" -> RPN: a b & c &
 
-		// Expressions with parentheses
-		{"( 1 + 2 ) * 3", []string{"1", "2", "+", "3", "*"}},
-		{"( 4 + 5 ) / ( 7 - 3 )", []string{"4", "5", "+", "7", "3", "-", "/"}},
-		{"( 8 / 4 ) + ( 6 * 2 )", []string{"8", "4", "/", "6", "2", "*", "+"}},
+		// Concatenation with quantifiers
+		{"ab*", []string{"a", "b", "*", "&"}}, // "a" followed by "b*" -> RPN: a b * &
+		{"ab+", []string{"a", "b", "+", "&"}}, // "a" followed by "b+" -> RPN: a b + &
+		{"ab?", []string{"a", "b", "?", "&"}}, // "a" followed by "b?" -> RPN: a b ? &
 
-		// Expressions with exponentiation
-		{"3 + 5 ^ 2", []string{"3", "5", "2", "^", "+"}},
-		{"( 1 + 2 ) ^ 3", []string{"1", "2", "+", "3", "^"}},
+		// Alternation and concatenation
+		{"ab|c", []string{"a", "b", "&", "c", "|"}},   // "a" followed by "b" or "c" -> RPN: a b & c |
+		{"a(b|c)", []string{"a", "b", "c", "|", "&"}}, // "a" followed by either "b" or "c" -> RPN: a b c | &
 
-		// Complex expressions
-		{"3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3", []string{"3", "4", "2", "*", "1", "5", "-", "2", "3", "^", "^", "/", "+"}},
-		{"( 1 + 2 * 3 ) / 4", []string{"1", "2", "3", "*", "+", "4", "/"}},
+		// Grouping and concatenation
+		{"(ab)c", []string{"a", "b", "&", "c", "&"}},  // "a" followed by "b", then "c" -> RPN: a b & c &
+		{"(a|b)c", []string{"a", "b", "|", "c", "&"}}, // Either "a" or "b" followed by "c" -> RPN: a b | c &
 
-		// Edge cases
-		{"7", []string{"7"}},        // Single number
-		{"+ 5", []string{"5", "+"}}, // Operator before operand
-		{"7 *", []string{"7", "*"}}, // Operand before operator
-
+		// Concatenation with special characters
+		{"a.", []string{"a", ".", "&"}}, // "a" followed by any character -> RPN: a . &
+		// {"^ab$", []string{"^", "a", "&", "b", "&", "$", "&"}}, // Start anchor, "a" followed by "b", end anchor -> RPN: ^ a & b & $ &
 	}
 
 	for _, test := range tests {
-		result := ParseInput(test.input)
-		if !reflect.DeepEqual(result, test.expected) {
-			t.Errorf("ParseInput(%q) = %v; want %v", test.input, result, test.expected)
+		output := ParseInput(test.input)
+		if len(output) != len(test.expected) {
+			t.Errorf("ParseInput(%q) = %v; want %v", test.input, output, test.expected)
+			continue
+		}
+		for i := range output {
+			if output[i] != test.expected[i] {
+				t.Errorf("ParseInput(%q) = %v; want %v", test.input, output, test.expected)
+				break
+			}
 		}
 	}
 }
