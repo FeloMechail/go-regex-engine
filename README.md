@@ -9,13 +9,14 @@
    - [x] Any character matching (e.g., '.')
    - [ ] implement multiple lines
 
-4. [ ] Design and implement NFA structure
+4. [X] Design and implement NFA structure
    - [X] Design Stack data structure and RPN parser using Shunting yard Algo
-   - [ ] Define State and NFA structs
-   - [ ] Implement state transitions
+   - [X] Define State and NFA structs
+   - [X] Implement state transitions
 
-5. [ ] Implement Thompson's construction algorithm
-   - [ ] Convert regex to NFA
+5. [X] Implement Thompson's construction algorithm
+   - [X] Convert regex to NFA
+   - [ ] Testing
 
 6. [ ] Implement character classes
    - [ ] Character set matching (e.g., [abc])
