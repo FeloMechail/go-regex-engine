@@ -21,7 +21,7 @@ func TestParseInput(t *testing.T) {
 		// Alternation and concatenation
 		{"ab|c", []string{"a", "b", "&", "c", "|"}},   // "a" followed by "b" or "c" -> RPN: a b & c |
 		{"a(b|c)", []string{"a", "b", "c", "|", "&"}}, // "a" followed by either "b" or "c" -> RPN: a b c | &
-
+		{"a(a+b)*b", []string{"a", "a", "b", "+", "*", "&", "b", "&"}}, //should this be <- or a a b + & * & b &
 		// Grouping and concatenation
 		{"(ab)c", []string{"a", "b", "&", "c", "&"}},  // "a" followed by "b", then "c" -> RPN: a b & c &
 		{"(a|b)c", []string{"a", "b", "|", "c", "&"}}, // Either "a" or "b" followed by "c" -> RPN: a b | c &

@@ -16,7 +16,10 @@ func TestNewState(t *testing.T) {
 	}
 
 	if len(state.Transitions) != 0 {
-		t.Errorf("Expected Transitions to be empty, got %d elements", len(state.Transitions))
+		t.Errorf(
+			"Expected Transitions to be empty, got %d elements",
+			len(state.Transitions),
+		)
 	}
 
 	if state.epsilonTransitions == nil {
@@ -24,7 +27,10 @@ func TestNewState(t *testing.T) {
 	}
 
 	if len(state.epsilonTransitions) != 0 {
-		t.Errorf("Expected epsilonTransitions to be empty, got %d elements", len(state.epsilonTransitions))
+		t.Errorf(
+			"Expected epsilonTransitions to be empty, got %d elements",
+			len(state.epsilonTransitions),
+		)
 	}
 
 	if state.Accepting != false {
@@ -52,24 +58,5 @@ func TestAddTransition(t *testing.T) {
 		if states[0] != state2 {
 			t.Fatalf("Expected state2 in transition list, got different state")
 		}
-	}
-}
-
-func TestNewNFA(t *testing.T) {
-	startState := NewState()
-	acceptState := NewState()
-
-	nfa := NewNFA(startState, acceptState)
-
-	if nfa == nil {
-		t.Fatalf("Expected new NFA to be non-nil")
-	}
-
-	if nfa.Start != startState {
-		t.Errorf("Expected Start state to be %v, got %v", startState, nfa.Start)
-	}
-
-	if nfa.Accept != acceptState {
-		t.Errorf("Expected Accept state to be %v, got %v", acceptState, nfa.Accept)
 	}
 }

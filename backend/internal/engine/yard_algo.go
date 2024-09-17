@@ -32,14 +32,16 @@ func isLetter(c byte) bool {
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
 
-func addCancatenation(input string) (output string) {
+// FIXME: concat after + if (a+b), maybe dont need fixing
+func addConcatenation(input string) (output string) {
 	for i := 0; i < len(input); i++ {
 		output += string(input[i])
 		if i+1 < len(input) {
 			current := input[i]
 			next := input[i+1]
 
-			if (isLetter(current) || current == ')' || current == '*' || current == '+' || current == '?') && isLetter(next) || next == '(' || next == '.' {
+			if (isLetter(current) || current == ')' || current == '*' || current == '+' || current == '?') &&
+				(isLetter(next) || next == '(' || next == '.') {
 				output += "&"
 			}
 		}
@@ -47,9 +49,9 @@ func addCancatenation(input string) (output string) {
 	return
 }
 
-func ParseInput(input string) (rpn []string) {
+func ParseInput(input string) (rpn []rune) {
 	stack := Stack[rune]{}
-	input = addCancatenation(input)
+	input = addConcatenation(input)
 	for _, char := range input {
 		switch char {
 		case ' ':
@@ -62,24 +64,26 @@ func ParseInput(input string) (rpn []string) {
 			} else {
 				for op != '(' {
 					// rpn += " " + string(op)
-					rpn = append(rpn, string(op))
+					rpn = append(rpn, op)
 					stack.Pop()
 					op, _ = stack.Top()
 				}
-				//pop final (
+				// pop final (
 				stack.Pop()
 			}
 		default:
 			if prec, isOp := regexPrecedence[char]; isOp {
 				for !stack.IsEmpty() {
 					op, _ := stack.Top()
-					if prec2, isOp := regexPrecedence[op]; !isOp || prec.prec > prec2.prec || prec.prec == prec2.prec && prec.righAssoc {
+					if prec2, isOp := regexPrecedence[op]; !isOp ||
+						prec.prec > prec2.prec ||
+						prec.prec == prec2.prec && prec.righAssoc {
 						break
 					}
-					//top item is an operator
+					// top item is an operator
 					stack.Pop()
 					// rpn += " " + string(op)
-					rpn = append(rpn, string(op))
+					rpn = append(rpn, op)
 				}
 				stack.Push(char)
 			} else {
@@ -87,7 +91,7 @@ func ParseInput(input string) (rpn []string) {
 				// 	rpn += " "
 				// }
 				// rpn += string(char)
-				rpn = append(rpn, string(char))
+				rpn = append(rpn, char)
 			}
 		}
 	}
@@ -95,7 +99,7 @@ func ParseInput(input string) (rpn []string) {
 	for !stack.IsEmpty() {
 		op, _ := stack.Top()
 		// rpn += " " + string(op)
-		rpn = append(rpn, string(op))
+		rpn = append(rpn, op)
 		stack.Pop()
 	}
 	return
